@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [user, setUser] = useState([])
+  const [users, setUsers] = useState([])
   useEffect(()=>{
       fetch('http://localhost:5000/users')
       .then(res=>res.json())
-      .then(data => setUser(data))
+      .then(data => setUsers(data))
   },[])
 
 
@@ -16,17 +16,25 @@ function App() {
     // console.log("clicked the button");
     const form = e.target;
     const name = form.name.value;
-    const email = form.emain.value;
+    const email = form.email.value;
     const user = [name, email];
 
 
     fetch('http://localhost:5000/users', {
       method:"POST",
       headers:{
-        'content-type':'application/josn'
+        'content-type':'application/json'
       },
       body:JSON.stringify(user)
-    });
+    })
+    .then(res =>res.json())
+    .then(data => {
+      console.log(data)
+       const newUser = [...users, data]
+       setUsers(newUser)
+    })
+
+   
 
   }
 
@@ -35,7 +43,7 @@ function App() {
       <div>
         <h1>
           {
-            user.map(user=> <li key={user.uid}>{user.name}</li>)
+            users.map(user => <li key = {user.id}> {user.name} </li>)
           }
         </h1>
         <div>
